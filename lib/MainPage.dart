@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    futureUserInfo = fetchUserInfo();
+    //futureUserInfo = fetchUserInfo();
   }
 
   @override
@@ -103,45 +103,45 @@ class _MainPageState extends State<MainPage> {
         children: [
           Text('🏡', style: GoogleFonts.notoColorEmoji(fontSize: 50)),
           SizedBox(width: 10),
-          FutureBuilder<UserInfo>(
-              future: fetchUserInfo(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  String userInfoTxt =
-                      '' + snapshot.data!.protectorName; // TODO
-                  String userRole = snapshot.data!.userRole;
-
-                  if (userRole == 'PROTECTOR') {
-                    userInfoTxt += '보호자님';
-                  } else if (userRole == 'MANAGER') {
-                    userInfoTxt += '관리자님';
-                  } else {
-                    userInfoTxt += '요양보호사님';
-                  }
-
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //더미
-                      // Text('금오요양원',
-                      //     textScaleFactor: 1.4,
-                      //     style: TextStyle(
-                      //         fontWeight: FontWeight.bold)), //TODO: 요양원 이름
-                      // Text('삼족오 보호자님'), //TODO: 내 역할
-
-                      //연동용
-                      Text(snapshot.data!.facilityName,
-                          textScaleFactor: 1.4,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold)), //TODO: 요양원 이름
-                      Text(userInfoTxt), //TODO: 내 역할
-                    ],
-                  );
-                } else {
-                  return Text("none"); //데이터를 못받아왔을 때
-                }
-              })
+          // FutureBuilder<UserInfo>(
+          //     future: fetchUserInfo(),
+          //     builder: (context, snapshot) {
+          //       if (snapshot.hasData) {
+          //         String userInfoTxt =
+          //             '' + snapshot.data!.protectorName; // TODO
+          //         String userRole = snapshot.data!.userRole;
+          //
+          //         if (userRole == 'PROTECTOR') {
+          //           userInfoTxt += '보호자님';
+          //         } else if (userRole == 'MANAGER') {
+          //           userInfoTxt += '관리자님';
+          //         } else {
+          //           userInfoTxt += '요양보호사님';
+          //         }
+          //
+          //         return Column(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             //더미
+          //             // Text('금오요양원',
+          //             //     textScaleFactor: 1.4,
+          //             //     style: TextStyle(
+          //             //         fontWeight: FontWeight.bold)), //TODO: 요양원 이름
+          //             // Text('삼족오 보호자님'), //TODO: 내 역할
+          //
+          //             //연동용
+          //             Text(snapshot.data!.facilityName,
+          //                 textScaleFactor: 1.4,
+          //                 style: TextStyle(
+          //                     fontWeight: FontWeight.bold)), //TODO: 요양원 이름
+          //             Text(userInfoTxt), //TODO: 내 역할
+          //           ],
+          //         );
+          //       } else {
+          //         return Text("none"); //데이터를 못받아왔을 때
+          //       }
+          //     })
         ],
       ),
     );
@@ -186,8 +186,7 @@ class _MainPageState extends State<MainPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(textEmoji[index],
-                        style: GoogleFonts.notoColorEmoji(fontSize: 30)),
+                    Text(textEmoji[index], style: GoogleFonts.notoColorEmoji(fontSize: 30)),
                     SizedBox(height: 5),
                     Text(
                       textMenu[index],
@@ -236,15 +235,15 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-Future<UserInfo> fetchUserInfo() async {
-  final response = await http.get(
-      Uri.parse('http://43.201.27.95:8080/v1/users/1'),
-      headers: {'Accept-Charset': 'utf-8'});
-  final jsonResponse = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
-
-  if (response.statusCode == 200) {
-    return UserInfo.fromJson(jsonResponse);
-  } else {
-    throw Exception('Failed to load UserInfo');
-  }
-}
+// Future<UserInfo> fetchUserInfo() async {
+//   final response = await http.get(
+//       Uri.parse('http://43.201.27.95:8080/v1/users/1'),
+//       headers: {'Accept-Charset': 'utf-8'});
+//   final jsonResponse = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
+//
+//   if (response.statusCode == 200) {
+//     return UserInfo.fromJson(jsonResponse);
+//   } else {
+//     throw Exception('Failed to load UserInfo');
+//   }
+// }

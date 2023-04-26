@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import '/Allim/EditAllimPage.dart';
+import '/Supplementary/PageRouteWithAnimation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../domain/NoticeDetail.dart';
@@ -46,6 +47,7 @@ class _ManagerSecondAllimPageState extends State<ManagerSecondAllimPage> {
         future: fetchNoticeDetail(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            final data = snapshot.data!; // 불러온 더미 데이터
             return ListView(
               children: [
                 Column(
@@ -61,12 +63,12 @@ class _ManagerSecondAllimPageState extends State<ManagerSecondAllimPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '구미요양원 요양보호사',
+                                data.test,
                                 //snapshot.data!.userName,
                                 style: TextStyle(fontSize: 13),
                               ),
                               Text(
-                                '2023.03.24',
+                                  data.createDate,
                                 //snapshot.data!.createDate,
                                 style: TextStyle(fontSize: 10),
                               ),
@@ -75,8 +77,14 @@ class _ManagerSecondAllimPageState extends State<ManagerSecondAllimPage> {
                           Spacer(),
                           Container(
                             child: OutlinedButton(
-                                onPressed: () {
-                                  //수정 화면으로 넘어가기
+                                onPressed: () async {
+                                  //TODO: 수정 화면으로 넘어가기
+
+
+
+
+
+
                                 },
                                 child: Text('수정')),
                           ),
@@ -101,7 +109,7 @@ class _ManagerSecondAllimPageState extends State<ManagerSecondAllimPage> {
                         height: 300,
                         child: Container(
                           child: Image.asset(
-                            'assets/images/tree.jpg',
+                            data.imageUrl,
                             fit: BoxFit.fill,
                           ),
                         )),
@@ -114,12 +122,12 @@ class _ManagerSecondAllimPageState extends State<ManagerSecondAllimPage> {
                       margin: EdgeInsets.only(bottom: 10),
                       child: Text(
                         //snapshot.data!.content,
-                        '오늘은 날씨가 좋아서 걷기 운동을 하였습니다.오늘은 날씨가 좋아서 걷기 운동을 하였습니다.오늘은 날씨가 좋아서 걷기 운동을 하였습니다. 오늘은 날씨가 좋아서 걷기 운동을 하였습니다.오늘은 날씨가 좋아서 걷기 운동을 하였습니다. 오늘은 날씨가 좋아서 걷기 운동을 하였습니다.',
+                        data.content,
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
                     //알림장 안에 있는 어르신의 일일정보
-                    informdata("전량섭취\n전량섭취\n전량섭취\n아침에만")
+                    informdata('${data.subContent}'),
                     //informdata(snapshot.data!.subContent) - 연동용
                   ],
                 )
@@ -183,19 +191,56 @@ class _ManagerSecondAllimPageState extends State<ManagerSecondAllimPage> {
   }
 
   Future<NoticeDetail> fetchNoticeDetail() async {
-    String url =
-        'http://43.201.27.95:ㅁㄴㅇㄹ/v1/notices/detail/' + noticeId.toString();
+    // String url =
+    //     'http://43.201.27.95:ㅁㄴㅇㄹ/v1/notices/detail/' + noticeId.toString();
+    //
+    // print(url);
+    // final response =
+    // await http.get(Uri.parse(url), headers: {'Accept-Charset': 'utf-8'});
+    // final jsonResponse = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
+    //
+    // if (response.statusCode == 202) {
+    //   return NoticeDetail.fromJson(jsonResponse);
+    // } else {
+    //   print(noticeId.toString());
+    //   throw Exception('Failed to load NoticeDetail');
+    // }
 
-    print(url);
-    final response =
-        await http.get(Uri.parse(url), headers: {'Accept-Charset': 'utf-8'});
-    final jsonResponse = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
+    //TODO: 더미 데이터
+    List<Map<String, dynamic>> dummyData = [
+      {
+        'noticeId': 1,
+        'userId': 1,
+        'test': '삼족오 보호자님',
+        'create_date': '2022-04-26',
+        'content': '안녕하세요! 이번 주말에는 서울에서 개최되는 대한민국 축구 대회에 참가하실 분들은 꼭 참고하세요!',
+        'subContent': '전량섭취\n전량섭취\n전량섭취\n아침',
+        'image_url': 'assets/images/cake.jpg'
+      },
+      {
+        'noticeId': 2,
+        'userId': 1,
+        'test': '스쿨존 보호자님',
+        'create_date': '2022-05-01',
+        'content': '오늘은 교통안전 교육을 진행합니다.',
+        'subContent': '전량섭취\nㅋㅋㅋㅋ\n전량섭취\n아침에만',
+        'image_url': 'assets/images/cake.jpg'
+      },
+      {
+        'noticeId': 3,
+        'userId': 1,
+        'test': '동네 친구들 보호자님',
+        'create_date': '2022-05-10',
+        'content': '어린이집 미술교육 결과물을 전달합니다.',
+        'subContent': '전량섭취\n어쩔방구\n전량섭취\n아침에만',
+        'image_url': 'assets/images/cake.jpg'
+      },
+    ];
 
-    if (response.statusCode == 202) {
-      return NoticeDetail.fromJson(jsonResponse);
-    } else {
-      print(noticeId.toString());
-      throw Exception('Failed to load NoticeDetail');
-    }
+    List<NoticeDetail> dummyDetails = dummyData.map((data) => NoticeDetail.fromJson(data)).toList();
+    //await Future.delayed(Duration(seconds: 1));
+
+    return dummyDetails.firstWhere((detail) => detail.noticeId == noticeId);
+
   }
 }
