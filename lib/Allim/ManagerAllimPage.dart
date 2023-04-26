@@ -7,6 +7,8 @@ import '/NoticeModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
+
 class ManagerAllimPage extends StatefulWidget {
   @override
   ManagerAllimPageState createState() {
@@ -15,7 +17,10 @@ class ManagerAllimPage extends StatefulWidget {
 }
 
 class ManagerAllimPageState extends State<ManagerAllimPage> {
-  List _notices = [];
+  //late Map<String, dynamic> _notices;
+  List<Map<String, dynamic>> _notices = []; // 수정된 부분
+
+
 
   @override
   void initState() {
@@ -24,12 +29,39 @@ class ManagerAllimPageState extends State<ManagerAllimPage> {
   }
 
   Future<void> _fetchNotices() async {
-    final response = await http.get(
-        Uri.parse('http://43.201.27.95:8080/v1/notices/1'),
-        headers: {'Accept-Charset': 'utf-8'});
-    final data = json.decode(utf8.decode(response.bodyBytes));
+    // final response = await http.get(
+    //     Uri.parse('http://43.201.27.95:8080/v1/notices/1'),
+    //     headers: {'Accept-Charset': 'utf-8'});
+    List<Map<String, dynamic>> allimList = [
+      {
+        'noticeId': 1,
+        'protect': '삼족오 보호자님',
+        'create_date': '2023-04-25',
+        'content': '안녕하세용',
+        'imageUrl': 'assets/images/tree.jpg'
+      },
+      {
+        'noticeId': 2,
+        'protect': '스쿨존 보호자님',
+        'create_date': '2023-04-26',
+        'content': '오늘은 교통안전 교육을 진행합니다.',
+        'imageUrl': 'assets/images/cake.jpg'
+      },
+      {
+        'noticeId': 3,
+        'protect': '동네 친구들 보호자님',
+        'create_date': '2023-04-27',
+        'content': '어린이집 미술교육 결과물을 전달합니다.',
+        'imageUrl': 'assets/images/cake.jpg'
+      },
+    ];
+    String jsonString = json.encode(allimList);
+    dynamic decodedJson = json.decode(jsonString);
+    List<Map<String, dynamic>> parsedJson = List<Map<String, dynamic>>.from(decodedJson);
+    //final data = json.decode(utf8.decode(response.bodyBytes));
+
     setState(() {
-      _notices = data;
+      _notices = parsedJson;
     });
   }
 
@@ -70,7 +102,6 @@ class ManagerAllimPageState extends State<ManagerAllimPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Color(0xfff8f8f8),
       appBar: AppBar(
         title: const Text('알림장'),
       ),
@@ -91,14 +122,19 @@ class ManagerAllimPageState extends State<ManagerAllimPage> {
       //padding: EdgeInsets.all(10),
       child: ListView.separated(
         itemCount: _notices.length,
+
         shrinkWrap: true,
         itemBuilder: (context, index) {
+          final parsedJson = _notices[index];
+
           return InkWell(
               onTap: () {
                 pageAnimation(
                     context,
                     ManagerSecondAllimPage(
-                        noticeId: _notices[index]['noticeId']));
+                        noticeId: _notices[index]['noticeId'] //TODO: 변경하기
+                    )
+                );
                 print(index);
               },
               child: Column(
@@ -119,7 +155,7 @@ class ManagerAllimPageState extends State<ManagerAllimPage> {
                               //어떤 보호자에게 썼는지
                               Container(
                                 child: Text(
-                                  noticeWho[index], //더미
+                                  parsedJson['protect'],
                                   style: TextStyle(
                                     fontSize: 12,
                                   ),
@@ -128,7 +164,7 @@ class ManagerAllimPageState extends State<ManagerAllimPage> {
                               //언제 썼는지
                               Container(
                                 child: Text(
-                                  _notices[index]['create_date'],
+                                  parsedJson['create_date'],
                                   style: TextStyle(
                                     fontSize: 10,
                                   ),
@@ -140,7 +176,8 @@ class ManagerAllimPageState extends State<ManagerAllimPage> {
                               Container(
                                   padding: EdgeInsets.fromLTRB(0, 5, 15, 0),
                                   child: Text(
-                                    _notices[index]['content'],
+                                    parsedJson['content'],
+                                    // json.decode(jsonString)['content'],
                                     //noticeData[index].detail,  //더미
                                     style: TextStyle(fontSize: 14),
                                     maxLines: 2,
@@ -157,7 +194,8 @@ class ManagerAllimPageState extends State<ManagerAllimPage> {
                             height: 100,
                             child: Container(
                               child: Image.asset(
-                                noticeData[index].imgPath, //더미
+                                parsedJson['imageUrl'],
+                                // json.decode(jsonString)['imageUrl'],
                                 fit: BoxFit.fill,
                               ),
                             )),
